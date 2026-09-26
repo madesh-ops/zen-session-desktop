@@ -11,6 +11,7 @@ const { createPillWindow, resizePill, startCursorWatch } = require('./pill-windo
 const { registerIpc } = require('./ipc');
 const { notifyComplete } = require('./notify');
 const { registerToastIdentity } = require('./toast-identity');
+const { APP_ID } = require('./app-id');
 
 // Points the whole app at a different data folder, for testing against a
 // throwaway profile instead of the real one. It has to happen before the
@@ -228,8 +229,9 @@ function labelFor(state) {
 }
 
 function start() {
-  // Windows groups taskbar items and attributes notifications by this id.
-  app.setAppUserModelId('com.zensession.desktop');
+  // Windows groups taskbar items and attributes notifications by this id. A
+  // source run has its own, so it can never take over the installed app's.
+  app.setAppUserModelId(APP_ID);
   app.setName('Zen Session');
 
   app.on('second-instance', () => restoreWindow());

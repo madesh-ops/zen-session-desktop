@@ -27,9 +27,11 @@ const { app } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const { execFile } = require('child_process');
+const { APP_ID, DISPLAY_NAME } = require('./app-id');
 
-const KEY = 'HKCU\\SOFTWARE\\Classes\\AppUserModelId\\com.zensession.desktop';
-const DISPLAY_NAME = 'Zen Session';
+// Per id, so a source run registers its own entry and leaves the installed
+// app's name and icon alone.
+const KEY = `HKCU\\SOFTWARE\\Classes\\AppUserModelId\\${APP_ID}`;
 
 // Packaged builds copy resources/ beside the asar; development runs from
 // source. The same pair the tray and the sound loader look through.

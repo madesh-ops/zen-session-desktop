@@ -7,8 +7,9 @@
  * raise it, and neither does pausing. That matters: a notification for
  * something you did on purpose is noise.
  *
- * Windows attributes a toast by AppUserModelID, which index.js sets to
- * com.zensession.desktop and the installer puts on the Start Menu shortcut.
+ * Windows attributes a toast by AppUserModelID, which index.js sets (from
+ * app-id.js) to com.zensession.desktop, the id the installer puts on the Start
+ * Menu shortcut. A source run uses com.zensession.desktop.dev instead.
  * Running from source there is no such shortcut, so a toast in development may
  * be attributed to Electron or, depending on the machine, not shown at all —
  * that is Windows, not a bug here.
