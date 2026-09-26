@@ -1,0 +1,14 @@
+/* Space Grotesk, bundled rather than fetched, so the timer looks the same
+   offline as it does online. Latin subset of the variable font — one file
+   covers every weight the app uses.
+
+   Space Grotesk by Florian Karsten, SIL Open Font License 1.1.
+   See fonts/OFL.txt. */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('../fonts/space-grotesk-latin.woff2') format('woff2');
+}

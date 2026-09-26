@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en" data-theme="midnight" data-mode="focus">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; script-src 'self'">
+<title>Zen Session</title>
+<link rel="stylesheet" href="styles/fonts.css">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/app.css">
+<link rel="stylesheet" href="styles/sounds.css">
+</head>
+<body>
+
+<div class="shell" id="shell" data-running="false">
+  <div class="bloom"></div>
+
+  <nav class="rail">
+    <img class="mark" src="assets/zen-mark-on-dark.svg" alt="Zen Session" draggable="false">
+
+    <button type="button" class="rail-btn" data-view="timer" aria-label="Timer" aria-current="page">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9.5V13l2.5 1.6"></path><path d="M9.5 2h5"></path></svg>
+    </button>
+
+    <button type="button" class="rail-btn" data-view="timetable" aria-label="Timetable">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"></rect><path d="M3 9.5h18M9 9.5v11M15 9.5v11"></path></svg>
+    </button>
+
+    <button type="button" class="rail-btn" data-view="sounds" aria-label="Sounds">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 11v2M8 8v8M12 4.5v15M16 8v8M20 11v2"></path></svg>
+    </button>
+
+    <button type="button" class="rail-btn" data-view="settings" aria-label="Settings">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 12h3M11 12h9M4 17h7M15 17h5"></path><circle cx="16" cy="7" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="13" cy="17" r="2"></circle></svg>
+    </button>
+
+    <div class="rail-spacer"></div>
+  </nav>
+
+  <div class="main">
+
+    <header class="titlebar">
+      <div class="brand">Zen Session</div>
+      <div class="status-chip"><span class="dot"></span><span id="status-text">Focusing</span></div>
+      <div style="flex-grow: 1"></div>
+
+      <button type="button" class="win-btn" id="btn-pill" aria-label="Minimize to floating pill">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="8.5" width="18" height="7" rx="3.5"></rect><circle cx="7.5" cy="12" r="1.3" fill="currentColor" stroke="none"></circle></svg>
+      </button>
+      <button type="button" class="win-btn" id="btn-min" aria-label="Minimize">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 12h12"></path></svg>
+      </button>
+      <button type="button" class="win-btn danger" id="btn-close" aria-label="Close to tray">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"></path></svg>
+      </button>
+    </header>
+
+    <!-- ------------------------------------------------------- timer -- -->
+    <section class="view" id="view-timer" data-active="true">
+
+      <div class="segmented" role="group" aria-label="Timer mode">
+        <button type="button" data-mode="focus" aria-pressed="true">Focus</button>
+        <button type="button" data-mode="short" aria-pressed="false">Short break</button>
+        <button type="button" data-mode="long" aria-pressed="false">Long break</button>
+      </div>
+
+      <div class="ring-wrap">
+        <svg width="380" height="380" viewBox="0 0 380 380" aria-hidden="true">
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--accent)"></stop>
+              <stop offset="100%" stop-color="var(--accent-bright)"></stop>
+            </linearGradient>
+          </defs>
+          <circle cx="190" cy="190" r="170" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="12"></circle>
+          <circle id="ring-progress" cx="190" cy="190" r="170" fill="none" stroke="url(#ringGrad)"
+                  stroke-width="12" stroke-linecap="round" stroke-dasharray="1068.14" stroke-dashoffset="1068.14"></circle>
+        </svg>
+
+        <div class="ring-face">
+          <div class="ring-label" id="ring-label">Ready</div>
+          <div class="clock" id="clock" role="timer" aria-live="off">25:00</div>
+          <div class="ring-sub" id="ring-sub">Session 1 of 4</div>
+          <div class="ring-now" id="ring-now" data-has="false">
+            <span class="tick" aria-hidden="true"></span>
+            <span class="what" id="ring-now-what"></span>
+            <span class="until" id="ring-now-until"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button type="button" class="glass-btn primary" id="btn-primary">
+          <span id="primary-icon"></span>
+          <span id="primary-text">Start focus</span>
+        </button>
+        <button type="button" class="glass-btn icon" id="btn-reset" aria-label="Reset">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"></path><path d="M19.8 4.5v4.2h-4.2"></path></svg>
+        </button>
+        <button type="button" class="glass-btn icon" id="btn-skip" aria-label="Skip to the next interval">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5.5l8 6.5-8 6.5z"></path><path d="M18 5.5v13"></path></svg>
+        </button>
+      </div>
+
+      <div class="dots" id="dots" aria-label="Sessions completed in this cycle"></div>
+    </section>
+
+    <!-- --------------------------------------------------- timetable -- -->
+    <section class="view" id="view-timetable">
+      <div class="week-head">
+        <div>
+          <h2 id="week-title">This week</h2>
+          <div class="week-sub" id="week-sub"></div>
+        </div>
+        <div class="week-nav">
+          <button type="button" class="chip-btn square" id="week-prev" aria-label="Previous week">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5L8 12l6.5 6.5"></path></svg>
+          </button>
+          <button type="button" class="chip-btn" id="week-today">Today</button>
+          <button type="button" class="chip-btn square" id="week-zoom-out" aria-label="Show more hours">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"></path></svg>
+          </button>
+          <button type="button" class="chip-btn square" id="week-zoom-in" aria-label="Widen the hours">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12M12 6v12"></path></svg>
+          </button>
+          <button type="button" class="chip-btn square" id="week-next" aria-label="Next week">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5.5L16 12l-6.5 6.5"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid-panel">
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <div class="legend">
+        <div><span class="swatch planned"></span>Planned — drag on a row to block out time</div>
+        <div><span class="swatch done"></span>Completed focus — fills in by itself</div>
+        <div><span class="swatch brk"></span>Break</div>
+        <div><span class="swatch now"></span>Now</div>
+        <div><span class="keyhint">Ctrl</span> + scroll to widen the hours · scroll to move through the day</div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------ sounds -- -->
+    <section class="view" id="view-sounds">
+      <h2>Sounds</h2>
+      <p class="sounds-intro">A calm bed to work under. One at a time, and it keeps playing while the window is away.</p>
+
+      <div class="sound-grid" id="sound-grid"></div>
+
+      <div class="card player">
+        <button type="button" class="glass-btn primary" id="btn-sound">
+          <span id="sound-icon"></span>
+          <span id="sound-text">Play</span>
+        </button>
+        <div class="now grow">
+          <div class="name" id="sound-now">Rain</div>
+          <div class="hint" id="sound-now-hint">Even, steady rain — the quietest thing to work under</div>
+          <div class="credit" id="sound-credit"></div>
+        </div>
+        <div class="volume">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9.5h3l4-3.5v12l-4-3.5H5z"></path><path d="M16 9.5a3.5 3.5 0 0 1 0 5"></path></svg>
+          <input type="range" id="sound-volume" min="0" max="100" step="1" value="50" aria-label="Sound volume">
+        </div>
+      </div>
+
+      <div class="footnote">All four are field recordings, bundled with the app and looped seamlessly — nothing is streamed or downloaded while you work.</div>
+    </section>
+
+    <!-- ---------------------------------------------------- settings -- -->
+    <section class="view" id="view-settings">
+      <h2>Settings</h2>
+
+      <div class="card pad">
+        <div class="card-label">Durations</div>
+        <div class="durations">
+          <div>
+            <label for="s-focus">Focus</label>
+            <div class="field">
+              <input id="s-focus" type="number" min="1" max="180" value="25">
+              <span>min</span>
+              <div class="stepper">
+                <button type="button" class="step" data-step="1" data-for="s-focus" aria-label="Increase focus length"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14.5L12 8.5l6 6"></path></svg></button>
+                <button type="button" class="step" data-step="-1" data-for="s-focus" aria-label="Decrease focus length"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label for="s-short">Short break</label>
+            <div class="field">
+              <input id="s-short" type="number" min="1" max="60" value="5">
+              <span>min</span>
+              <div class="stepper">
+                <button type="button" class="step" data-step="1" data-for="s-short" aria-label="Increase short break"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14.5L12 8.5l6 6"></path></svg></button>
+                <button type="button" class="step" data-step="-1" data-for="s-short" aria-label="Decrease short break"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label for="s-long">Long break</label>
+            <div class="field">
+              <input id="s-long" type="number" min="1" max="120" value="15">
+              <span>min</span>
+              <div class="stepper">
+                <button type="button" class="step" data-step="1" data-for="s-long" aria-label="Increase long break"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14.5L12 8.5l6 6"></path></svg></button>
+                <button type="button" class="step" data-step="-1" data-for="s-long" aria-label="Decrease long break"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label for="s-every">Long break every</label>
+            <div class="field">
+              <input id="s-every" type="number" min="1" max="12" value="4">
+              <span>sessions</span>
+              <div class="stepper">
+                <button type="button" class="step" data-step="1" data-for="s-every" aria-label="Increase sessions before a long break"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14.5L12 8.5l6 6"></path></svg></button>
+                <button type="button" class="step" data-step="-1" data-for="s-every" aria-label="Decrease sessions before a long break"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5l6 6 6-6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card row">
+        <div class="grow">
+          <div class="name">Theme</div>
+          <div class="hint" id="theme-hint">Forest — green focus, coral break</div>
+        </div>
+        <div class="themes" id="themes"></div>
+      </div>
+
+      <div class="card" style="padding: 6px 20px">
+        <div class="setting">
+          <div class="grow">
+            <div class="name">Start breaks automatically</div>
+            <div class="hint">Roll straight into the break when focus ends</div>
+          </div>
+          <button type="button" class="switch" role="switch" data-setting="autoStartBreaks" aria-checked="true" aria-label="Start breaks automatically"></button>
+        </div>
+        <div class="setting">
+          <div class="grow">
+            <div class="name">Start the next focus automatically</div>
+            <div class="hint">Keeps the cycle running without a click</div>
+          </div>
+          <button type="button" class="switch" role="switch" data-setting="autoStartFocus" aria-checked="false" aria-label="Start the next focus automatically"></button>
+        </div>
+        <div class="setting">
+          <div class="grow">
+            <div class="name">Keep the pill above other windows</div>
+            <div class="hint">Stays visible over full-screen apps too</div>
+          </div>
+          <button type="button" class="switch" role="switch" data-setting="pillAlwaysOnTop" aria-checked="true" aria-label="Keep the pill above other windows"></button>
+        </div>
+        <div class="setting">
+          <div class="grow">
+            <div class="name">Show what is playing on the pill</div>
+            <div class="hint">Reads Windows' media controls — display only, never sends commands</div>
+          </div>
+          <button type="button" class="switch" role="switch" data-setting="showMedia" aria-checked="true" aria-label="Show what is playing on the pill"></button>
+        </div>
+        <div class="setting">
+          <div class="grow">
+            <div class="name">Chime on completion</div>
+            <div class="hint">One soft tone on the frame the ring settles</div>
+          </div>
+          <button type="button" class="switch" role="switch" data-setting="chime" aria-checked="false" aria-label="Chime on completion"></button>
+        </div>
+        <div class="setting">
+          <div class="grow">
+            <div class="name">Notify me when an interval ends</div>
+            <div class="hint">A Windows notification, so it reaches you with the app hidden</div>
+          </div>
+          <button type="button" class="switch" role="switch" data-setting="notify" aria-checked="true" aria-label="Notify me when an interval ends"></button>
+        </div>
+        <div class="setting">
+          <div class="grow">
+            <div class="name">Launch when Windows starts</div>
+            <div class="hint">Opens straight to the pill, not the window</div>
+          </div>
+          <button type="button" class="switch" role="switch" data-setting="launchAtLogin" aria-checked="false" aria-label="Launch when Windows starts"></button>
+        </div>
+      </div>
+
+      <div class="card row">
+        <div class="grow">
+          <div class="name">Global shortcuts</div>
+          <div class="hint">Start or pause, and show or hide the window, from anywhere</div>
+        </div>
+        <div class="keys"><span>Ctrl</span><span>Alt</span><span>P</span></div>
+        <div class="keys"><span>Ctrl</span><span>Alt</span><span>O</span></div>
+      </div>
+
+      <div class="footnote">Motion and transparency follow your Windows settings. With animation or transparency effects off, springs become short cross-fades and glass becomes solid.</div>
+
+      <div class="card row about">
+        <img class="about-mark" src="assets/zen-mark-on-dark.svg" alt="" draggable="false">
+        <div class="about-text">
+          <div class="about-name">Zen Session</div>
+          <div class="about-tagline">Focus &middot; Breathe &middot; Begin</div>
+        </div>
+        <div class="grow"></div>
+        <div class="about-meta">
+          <div class="version">Version 1.5.0</div>
+          <div class="credit">by Madhesh Mithran</div>
+        </div>
+      </div>
+
+      <button type="button" class="danger-link" id="btn-quit">Quit Zen Session</button>
+    </section>
+
+  </div>
+</div>
+
+<script src="js/springs.js"></script>
+<script src="js/liquid.js"></script>
+<script src="js/timetable.js"></script>
+<script src="js/ambience.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

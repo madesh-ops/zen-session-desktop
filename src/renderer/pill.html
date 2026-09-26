@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-theme="midnight" data-mode="focus">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; script-src 'self'">
+<title>Zen Session</title>
+<link rel="stylesheet" href="styles/fonts.css">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/pill.css">
+</head>
+<body>
+
+<div class="pill" id="pill" data-running="false" data-media="false">
+
+  <div class="top">
+    <span class="dot" id="dot"></span>
+    <span class="time" id="time">25:00</span>
+    <button type="button" class="round" id="btn-toggle" aria-label="Start or pause"></button>
+    <button type="button" class="round ghost" id="btn-restore" aria-label="Restore window">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"></path><path d="M10 20H4v-6"></path><path d="M20 4l-7 7M4 20l7-7"></path></svg>
+    </button>
+  </div>
+
+  <div class="track"><span class="fill" id="fill"></span></div>
+
+  <div class="media" id="media">
+    <svg class="eq" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+      <rect x="0" y="5" width="2" height="7" rx="1"></rect>
+      <rect x="3.3" y="2" width="2" height="10" rx="1"></rect>
+      <rect x="6.6" y="6.5" width="2" height="5.5" rx="1"></rect>
+      <rect x="9.9" y="3.5" width="2" height="8.5" rx="1"></rect>
+    </svg>
+    <span class="track-name" id="track-name"></span>
+    <span class="source" id="source"></span>
+  </div>
+
+</div>
+
+<script src="js/springs.js"></script>
+<script src="js/pill.js"></script>
+</body>
+</html>

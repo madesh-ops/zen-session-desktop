@@ -1,0 +1,223 @@
+/* Sounds — the ambience section.
+ *
+ * Every selector here is scoped to #view-sounds or to a class that only exists
+ * inside it, with the one exception of the playing dot on the rail button,
+ * which needs to be visible from the other sections. Nothing in app.css is
+ * touched, so nothing already on screen can shift.
+ *
+ * The vocabulary is borrowed rather than invented: the same padding as
+ * #view-settings, the same .card, and .theme-btn's selected ring on the
+ * picked sound. */
+
+#view-sounds {
+  padding: 22px 40px 24px;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+#view-sounds h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.sounds-intro {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: -6px 0 2px;
+  flex-shrink: 0;
+}
+
+.sound-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+/* Not a .card: these are pressable, so they carry their own hover and the
+   selected ring, and the ripple delegation in app.js picks them up. */
+.sound-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  text-align: left;
+  border-radius: var(--r-button);
+  background: rgba(var(--glass-tint), 0.045);
+  border-top: 1px solid rgba(255, 255, 255, 0.11);
+  border-bottom: 1px solid var(--edge-dark);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.34);
+  transition: background 180ms ease, box-shadow 200ms ease, transform 100ms ease-out;
+}
+
+.sound-card:hover {
+  background: rgba(var(--glass-tint), 0.085);
+}
+
+.sound-card[aria-pressed='true'] {
+  box-shadow: 0 0 0 2px var(--focus), 0 8px 26px rgba(0, 0, 0, 0.34);
+}
+
+.sound-card .glyph {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-icon);
+  color: var(--text-faint);
+  background: rgba(var(--glass-tint), 0.07);
+  transition: color 200ms ease, background 200ms ease;
+}
+
+.sound-card[aria-pressed='true'] .glyph {
+  color: var(--accent-bright);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.sound-card .text {
+  min-width: 0;
+}
+
+.sound-card .name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sound-card .hint {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The bars only move while that sound is the one playing; a paused selection
+   keeps them still, which is the whole state readable at a glance. */
+.sound-card .glyph .bar {
+  /* Without fill-box an SVG child scales about the viewport origin, not its
+     own middle, and the bars slide instead of breathing. */
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.sound-card[data-playing='true'] .glyph .bar {
+  animation: sound-bar 1.6s ease-in-out infinite;
+}
+
+.sound-card[data-playing='true'] .glyph .bar:nth-child(2) {
+  animation-delay: 0.22s;
+}
+
+.sound-card[data-playing='true'] .glyph .bar:nth-child(3) {
+  animation-delay: 0.44s;
+}
+
+@keyframes sound-bar {
+  0%,
+  100% {
+    transform: scaleY(0.5);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* --------------------------------------------------------------- player -- */
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 20px;
+}
+
+.player .now {
+  min-width: 0;
+}
+
+.player .now .name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.player .now .hint {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+/* Small and dim on purpose: the licences ask for a credit, not for a headline. */
+.player .now .credit {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  width: 200px;
+  color: var(--text-faint);
+}
+
+/* The first range input in the app, so every part of it is drawn here. */
+.volume input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex-grow: 1;
+  height: 20px;
+  background: none;
+  cursor: pointer;
+}
+
+.volume input[type='range']::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: rgba(var(--glass-tint), 0.14);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.volume input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform 120ms ease-out;
+}
+
+.volume input[type='range']:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+/* ------------------------------------------------------------- the rail -- */
+
+/* A sound can be playing while you are reading the timetable, so the rail
+   carries a quiet dot rather than leaving it silent-but-unknown. */
+.rail-btn[data-playing='true']::after {
+  content: '';
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  box-shadow: 0 0 8px var(--accent-bright);
+}

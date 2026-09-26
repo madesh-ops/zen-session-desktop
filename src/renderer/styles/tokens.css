@@ -1,0 +1,129 @@
+/* The only file in the app that may contain a literal colour.
+   Every other stylesheet reads these variables — that is what makes the theme
+   picker a one-line change at runtime and keeps the pill in step with the window. */
+
+/* The base layer: Forest's palette, plus the tokens every theme inherits
+   rather than redeclaring. The app's default theme is Midnight, which is set
+   on <html> and in the store; this block is what a document with no
+   data-theme at all would fall back to. */
+:root,
+.theme-btn[data-theme='forest'] {
+  --focus: #2fa36b;
+  --focus-bright: #56d398;
+  --break: #ff6f5e;
+  --break-bright: #ffa189;
+  --long: #4fa8c7;
+  --long-bright: #8fd3e6;
+  --bg: #0c1210;
+  --text: #eaf0ec;
+
+  --glass-tint: 255, 255, 255;
+  --glass-alpha: 0.07;
+  --glass-alpha-strong: 0.1;
+}
+
+:root[data-theme='amber'],
+.theme-btn[data-theme='amber'] {
+  --focus: #e8a33d;
+  --focus-bright: #f5c078;
+  --break: #35b9a6;
+  --break-bright: #6fd6c7;
+  --long: #6c9fd4;
+  --long-bright: #9cc2e8;
+  --bg: #121008;
+  --text: #f1eee6;
+}
+
+:root[data-theme='slate'],
+.theme-btn[data-theme='slate'] {
+  --focus: #3b82c4;
+  --focus-bright: #79b0e2;
+  --break: #e0a458;
+  --break-bright: #f0c68e;
+  --long: #5fb3a3;
+  --long-bright: #8fd2c6;
+  --bg: #0b0f14;
+  --text: #e8edf2;
+}
+
+:root[data-theme='graphite'],
+.theme-btn[data-theme='graphite'] {
+  /* Focus and break separate by intensity here, not hue. */
+  --focus: #a3e635;
+  --focus-bright: #c4f070;
+  --break: #5a6b48;
+  --break-bright: #8ba070;
+  --long: #7c8b6b;
+  --long-bright: #a3b294;
+  --bg: #101211;
+  --text: #ecefec;
+}
+
+:root[data-theme='midnight'],
+.theme-btn[data-theme='midnight'] {
+  --focus: #ffffff;
+  --focus-bright: #ffffff;
+  --break: #ffb454;
+  --break-bright: #ffd093;
+  --long: #7fb2c9;
+  --long-bright: #a9cddd;
+  --bg: #000000;
+  --text: #ffffff;
+  /* True black swallows a thin glass surface, so lift it slightly. */
+  --glass-alpha: 0.1;
+  --glass-alpha-strong: 0.14;
+}
+
+:root {
+  /* Derived from --text so every theme gets matching dim tiers for free. */
+  --text-dim: color-mix(in srgb, var(--text) 62%, transparent);
+  --text-faint: color-mix(in srgb, var(--text) 42%, transparent);
+  --text-ghost: color-mix(in srgb, var(--text) 26%, transparent);
+
+  --glass: rgba(var(--glass-tint), var(--glass-alpha));
+  --glass-strong: rgba(var(--glass-tint), var(--glass-alpha-strong));
+  --edge-light: rgba(255, 255, 255, 0.22);
+  --edge-light-strong: rgba(255, 255, 255, 0.28);
+  --edge-dark: rgba(0, 0, 0, 0.28);
+  --hairline: rgba(var(--glass-tint), 0.07);
+
+  /* The accent for whatever mode is active; app.js flips this one variable. */
+  --accent: var(--focus);
+  --accent-bright: var(--focus-bright);
+
+  /* The icon rail's width, read by the rail itself and by anything that has to
+     centre against the window rather than against the area beside it. */
+  --rail-w: 72px;
+
+  --r-pill: 999px;
+  --r-panel: 20px;
+  --r-button: 16px;
+  --r-icon: 13px;
+  --r-cell: 8px;
+
+  --shadow-chip: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-button: 0 6px 20px rgba(0, 0, 0, 0.34);
+  --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.46);
+
+  /* A switch knob sits on a coloured track in every theme, so it stays white. */
+  --knob-on: #ffffff;
+
+  /* Brand, not theme: these do not follow the accent, because a logo that
+     changes colour with the theme stops being a logo. */
+  --brand-cream: #f2ede4;
+  --brand-sage: #7fa99b;
+
+  --font-ui: 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif;
+  --font-clock: 'Space Grotesk', 'Segoe UI', monospace;
+}
+
+:root[data-mode='short'],
+:root[data-mode='long'] {
+  --accent: var(--break);
+  --accent-bright: var(--break-bright);
+}
+
+:root[data-mode='long'] {
+  --accent: var(--long);
+  --accent-bright: var(--long-bright);
+}
