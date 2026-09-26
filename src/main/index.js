@@ -12,6 +12,14 @@ const { registerIpc } = require('./ipc');
 const { notifyComplete } = require('./notify');
 const { registerToastIdentity } = require('./toast-identity');
 
+// Points the whole app at a different data folder, for testing against a
+// throwaway profile instead of the real one. It has to happen before the
+// single-instance lock, which is keyed on this folder too, and before
+// anything reads or writes the store.
+if (process.env.ZEN_USER_DATA) {
+  app.setPath('userData', path.resolve(process.env.ZEN_USER_DATA));
+}
+
 // A second copy only exists to hand the first one a nudge (see
 // 'second-instance' below) and leave. Everything else — windows, tray,
 // shortcuts, the store — is registered inside start(), which only the copy
@@ -49,7 +57,7 @@ function createMainWindow({ reveal = true } = {}) {
       preload: path.join(__dirname, '..', 'preload', 'index.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false
+      sandbox: true
     }
   });
 

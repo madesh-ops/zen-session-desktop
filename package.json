@@ -1,7 +1,7 @@
 {
   "name": "zen-session",
   "productName": "Zen Session",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A calm focus timer for Windows: floating pill, weekly timetable, background sounds, five themes",
   "main": "src/main/index.js",
   "author": "Madhesh Mithran <madeshmithran055@gmail.com>",
@@ -9,6 +9,7 @@
   "private": true,
   "scripts": {
     "start": "electron .",
+    "test": "node scripts/test-timer.js && node scripts/test-store.js",
     "build": "electron-builder --win nsis",
     "icons": "electron scripts/make-icons.js",
     "sounds": "node scripts/fetch-sounds.js"
@@ -43,11 +44,19 @@
     },
     "extraMetadata": {
       "description": "Zen Session"
+    },
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "enableCookieEncryption": true
     }
   },
   "devDependencies": {
-    "electron": "^33.2.0",
-    "electron-builder": "^25.1.8",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3",
     "ffmpeg-static": "^5.3.0"
   }
 }
